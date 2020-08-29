@@ -1,0 +1,22 @@
+public class InsertedSort {
+
+	public static void main(String[] args) {
+		// TODO 自动生成的方法存根
+		//定义一个测试的数组
+		int[] arr= {3,6,5,4,2};
+		int j=0;    //该位置及该位置之前的元素为一个有序表
+		int val=0;    //用于存储要进行排序的值
+		for(int i=1;i<arr.length;i++) {
+			val=arr[i];  //保存用于插入的元素
+			j=i-1;       
+			while(j>=0&&val<arr[j]) {  //找到插入的位置
+				arr[j+1]=arr[j];
+				j--;
+			}
+			arr[j+1]=val;
+			System.out.printf("第%d次排序的结果是： \n",i);
+			System.out.println(Arrays.toString(arr));
+		}
+	}
+
+}
