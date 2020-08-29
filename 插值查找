@@ -1,0 +1,28 @@
+public class insertValSearch {
+
+	public static void main(String[] args) {
+		// TODO 自动生成的方法存根
+		//定义一个测试数组
+		int[] arr= {1,8,10,66,89,120,145,1000,1024};
+		int findVal=66;
+		System.out.println(Search(arr, 0, arr.length-1, findVal));
+	}
+	
+	public static int Search(int[] arr,int left,int right,int findVal) {
+		System.out.println("算法被调用了！");
+		if(left>right || findVal>arr[arr.length-1] || findVal<arr[0]) {
+			return -1;
+		}
+		
+		int mid=left+(right-left)*(findVal-arr[left])/(arr[right]-arr[left]);  //中间索引
+		int midVal=arr[mid];
+		if(findVal>midVal) {  //要查找的值大于中间值
+			return Search(arr, mid+1,right , findVal);  //往右边二分查找
+		}else if(findVal<midVal) {  //要查找的值小于中间值
+			return Search(arr, left, mid, findVal);    //往左边二分查找
+		}else {         //找到了值
+			return mid;
+		}
+	}
+
+}
