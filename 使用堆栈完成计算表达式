@@ -1,0 +1,184 @@
+public class calculator {
+
+	public static void main(String[] args) {
+		// TODO 自动生成的方法存根
+		String expresstion="20+2*6-3";
+		//创建两个堆栈，一个用于存放数字，一个用于存放运算符
+		calStack numStack=new calStack(10);
+		calStack operStack=new calStack(10);
+		int num1=0;  //用于存放pop出来的数
+		int num2=0;
+		int oper=0;
+		int res=0;
+		String str="";  //用于拼接多位数的字符
+		int index=0; //用于遍历字符串
+		char ch=' '; //用于存放遍历字符串的每一个字符
+		//遍历字符串
+		while(true) {
+			//获取字符
+			ch=expresstion.substring(index, index+1).charAt(0);
+			//判断字符是否为运算符
+			if(operStack.isOper(ch)) {  
+				//如果是运算符
+				//判断operStack中是否为空
+				if(operStack.isEmpty()) {
+					//如果为空，则直接存放进operStack中
+					operStack.push(ch);
+				}else {
+					//如果不为空，则进行比较
+					//如果该运算符比之前的一个运算符的比较级小或则等于，则进行运算
+					if(operStack.operCompare(ch)<=operStack.operCompare(operStack.getHead())) {
+						//先从numStack中弹出两个数
+						num1=numStack.pop();
+						num2=numStack.pop();
+						//从operStack中弹出一个运算符
+						oper=operStack.pop();
+						//进行运算
+						res=operStack.cal(num1, num2, oper);
+						//将res存入到numStack中
+					    numStack.push(res);
+					    //将比较的运算符存放如operStack中
+					    operStack.push(ch);
+					}else {
+						//该运算符比之前的一个运算符的比较级大，则直接入堆栈中
+						operStack.push(ch);
+					}
+				}
+			}else {
+				
+				str+=ch;  //不是运算符则往str中加ch
+				if(index==expresstion.length()-1) {
+					numStack.push(Integer.parseInt(str));
+				}else{
+					//如果后面一个数是运算符的话
+					if(operStack.isOper(expresstion.substring(index+1, index+2).charAt(0))) {
+						numStack.push(Integer.parseInt(str));
+						str="";
+					}
+				}
+			}
+			index++;
+			if(index>=expresstion.length()) {
+				break;
+			}
+		}
+		//表达式扫描完毕，顺序的从数栈和符号栈中pop出数字
+		while(true) {
+			//如果operStack中没有符号了，说明numStack中只还有一个数字了
+			if(operStack.isEmpty()) {
+				break;
+			}
+			num1=numStack.pop();
+			num2=numStack.pop();
+			oper=operStack.pop();
+			res=operStack.cal(num1, num2, oper);
+			numStack.push(res);
+		}
+		int result=numStack.pop();
+		System.out.printf("表达式%s=%d",expresstion,result);
+	}
+
+}
+
+
+class calStack{
+	
+	//定义一个最大堆栈容量
+	private int maxSize;
+	//定义一个top表示栈顶
+	private int top=-1;
+	//定义一个数组
+	int[] Stack;
+	
+	//创建数组
+ 	public calStack(int maxSize) {
+ 		this.maxSize=maxSize;
+ 		Stack=new int[this.maxSize];
+ 	}
+ 	
+ 	//判断堆栈是否已满
+ 	public boolean isFull() {
+ 		return top==maxSize-1;
+ 	}
+ 	
+ 	//判断堆栈是否为空
+ 	public boolean isEmpty() {
+ 		return top==-1;
+ 	}
+ 	
+ 	//入栈
+ 	public void push(int value) {
+ 		//判断堆栈是否已满
+ 		if(isFull()) {
+ 			System.out.println("堆栈已满！");
+ 			return;
+ 		}
+ 		
+ 		//入栈
+ 		top++;
+ 		Stack[top]=value;
+ 	}
+ 	
+ 	//出栈
+ 	public int pop() {
+ 		int value=Stack[top];
+ 		top--;
+ 		return value;
+ 	}
+	
+ 	//显示堆栈
+ 	public void show() {
+ 		//判断堆栈是否为空
+ 		if(isEmpty()) {
+ 			System.out.println("堆栈为空，没有数据");
+ 			return;
+ 		}
+ 		for(int i=top;i>=0;i--) {
+ 			System.out.printf("Stack[%d]=%d \n",i,Stack[i]);
+ 		}
+ 	}
+ 	
+ 	//获取头元素
+ 	public int getHead() {
+ 		return Stack[top];
+ 	}
+ 	
+ 	//操作符优先级比较
+ 	public int operCompare(int ch) {
+ 		if(ch=='*'||ch=='/') {
+ 			return 1;
+ 		}else if(ch=='+'||ch=='-') {
+ 			return 0;
+ 		}else {
+ 			return -1;
+ 		}
+ 	}
+ 	
+ 	//判断是不是一个运算符
+ 	public boolean isOper(char ch) {
+ 		return ch=='+'||ch=='-'||ch=='*'||ch=='/';
+ 	}
+ 	
+ 	//操作符运算
+ 	public int cal(int num1,int num2,int ch) {
+ 		int res=0;
+ 		switch(ch) {
+ 		case '+':
+ 			 res=num1+num2;
+ 			 break;
+ 		case '-':
+ 			res=num2-num1;
+ 			break;
+ 		case '*':
+ 			res=num1*num2;
+ 			break;
+ 		case '/':
+ 			res=num2/num1;
+ 			break;
+ 		default:
+ 			break;
+ 		}
+ 		return res;
+ 	}
+	
+}
