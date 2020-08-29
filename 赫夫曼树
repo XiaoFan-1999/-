@@ -1,0 +1,96 @@
+public class HuffmanTree {
+
+	public static void main(String[] args) {
+		// TODO 自动生成的方法存根
+		int[] arr= {13,7,8,3,29,6,1};
+		HNode root=createHuffmanTree(arr);
+		//进行遍历
+		preOrder(root);
+	}
+	
+	//编写一个前序遍历的方法
+	public static void preOrder(HNode root) {
+		if(root!=null) {
+			root.preOrder();
+		}else {
+			System.out.println("是空树，不能遍历~");
+		}
+	}
+	
+	
+	//创建赫夫曼树
+	public static HNode createHuffmanTree(int[] arr) {
+		//遍历arr数组，将每个值构成一个节点，将节点放入到ArrayList集合中
+		List<HNode> nodes=new ArrayList<>();
+		for(int values:arr) {
+			nodes.add(new HNode(values));
+		}
+		
+		while (nodes.size() > 1) {
+			// 将ArrayList进行从小到大的排序
+			Collections.sort(nodes);
+
+			// 取出根节点权值最小的两颗二叉树
+			// 取出权值最小的节点
+			HNode LeftNode = nodes.get(0);
+			// 取出权值次小的节点
+			HNode RightNode = nodes.get(1);
+			// 构建一个新的二叉树
+			HNode parents = new HNode(LeftNode.value + RightNode.value);
+			parents.left = LeftNode;
+			parents.right = RightNode;
+
+			// 将之前取出的两个节点删除
+			nodes.remove(LeftNode);
+			nodes.remove(RightNode);
+
+			// 将新的节点加入到nodes中
+			nodes.add(parents);
+
+		}
+		return nodes.get(0);
+		
+	}
+
+}
+
+//创建节点
+//为了进行排序，实现comparable方法
+class HNode implements Comparable<HNode>{
+	int value;
+	HNode left;
+	HNode right;
+	
+	
+	public HNode(int value) {
+		this.value = value;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Node [value=" + value + "]";
+	}
+
+
+	@Override
+	public int compareTo(HNode o) {
+		// TODO 自动生成的方法存根
+		//进行升序排序
+		return this.value-o.value;
+	}
+	
+	//前序遍历
+	public void preOrder() {
+		System.out.println(this);
+		
+		if(this.left!=null) {
+			this.left.preOrder();
+		}
+		
+		if(this.right!=null) {
+			this.right.preOrder();
+		}
+	}
+		
+}
