@@ -1,0 +1,110 @@
+//创建单向环形链表
+class circleLinkedList{
+	//创建一个first节点，没有编号
+	private Boy first=null;
+	//添加节点，构建成环形链表
+	public void addBoy(int nums) {
+		if(nums<1) {
+			System.out.println("无法构建环形链表");
+			return;
+		}
+		Boy curBoy=null; //辅助节点，帮助构建环形链表
+		//使用for循环创建环形链表
+		for(int i=1;i<=nums;i++) {
+			//根据编号，创建节点
+			Boy boy=new Boy(i);
+			//如果是第一个节点
+			if(i==1) {
+				first=boy;
+				first.setNext(first);  //构成环
+				curBoy=first;  //让curBoy指向第一个节点
+			}else {
+				curBoy.setNext(boy); //令curBoy的下一个节点指向新的节点
+				boy.setNext(first);  //构成新的环形
+				curBoy=boy;          //令curBoy节点后移
+			}
+		}
+	}
+	
+	//遍历当前环形链表
+	public void show() {
+		//判断链表是否为空
+		if(first==null) {
+			System.out.println("链表为空");
+			return;
+		}
+		//因为first不能动，所有需要一个辅助节点curBoy
+		Boy curBoy=first; //将curBoy指向第一个节点
+		while(true) {
+			System.out.printf("节点的编号为%d \n",curBoy.getNumber());
+			if(curBoy.getNext()==first) {
+				break;
+			}
+			curBoy=curBoy.getNext();
+		}
+	}
+	
+	//根据用户输入的数值，输出出圈顺序
+	public void out(int n,int k,int m) { //n表示总人数，k表示从第几个人开始报数，m表示数几下
+		//先对数据进行校验
+		if(k>n||first==null||k<1) {
+			System.out.println("输入数据有误");
+		}
+		//创建一个辅助变量helper
+		Boy helper=first;
+		//让其指向最后链表的最后一个节点
+		while(true) {
+			if(helper.getNext()==first) {
+				break;
+			}
+			helper=helper.getNext();
+		}
+		//小孩出圈
+		while(true) {
+			if(first==helper) { //说明只还有一个小孩了
+				break;
+			}
+			//小孩报数前，first和helper移动k-1次
+			for(int i=0;i<k-1;i++) {
+				first=first.getNext();
+				helper=helper.getNext();
+			}
+			//小孩开始报数
+			for(int i=0;i<m-1;i++) {
+				first=first.getNext();
+				helper=helper.getNext();
+			}
+			System.out.printf("编号为%d的小孩出圈了 \n",first.getNumber());
+			//移除小孩
+			first=first.getNext();
+			helper.setNext(first);
+		}
+		System.out.printf("最后留在圈中的小孩编号为%d",first.getNumber());
+		
+	}
+}
+
+class Boy{
+	private int number; //表编号
+	private Boy next; //指向下一个位置
+	
+	public Boy(int number) {
+		this.number=number;
+	}
+
+	public int getNumber() {
+		return number;
+	}
+
+	public void setNumber(int number) {
+		this.number = number;
+	}
+
+	public Boy getNext() {
+		return next;
+	}
+
+	public void setNext(Boy next) {
+		this.next = next;
+	}
+}
