@@ -1,0 +1,29 @@
+public class ShellSort {
+
+	public static void main(String[] args) {
+		// TODO 自动生成的方法存根
+		//定义一个测试数组
+		int[] arr= {8,9,1,7,2,3,5,4,6,0};
+		int gap=arr.length; //用于计算需要几次排序
+		int time=0;  //记录第几次排序
+		int temp=0;  //用于存储中间变量
+		while(gap!=1) {  //只要步长不为1就继续循环
+			time++;
+			gap=gap/2; 
+			for(int i=gap;i<arr.length;i++) {
+				int j=i;
+				temp=arr[j];
+				if(arr[j]<arr[j-gap]) {
+					while(j-gap>=0&&temp<arr[j-gap]) { //跳出while循环时，已经找到了要插入的位置
+						arr[j]=arr[j-gap];
+						j-=gap;
+					}
+					arr[j]=temp;
+				}
+			}
+			System.out.printf("第%d次排序的结果是： \n",time);
+			System.out.println(Arrays.toString(arr));
+		}
+	}
+
+}
