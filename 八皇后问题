@@ -1,0 +1,56 @@
+public class Queue8 {
+
+	//定义一个max表示共有多少个皇后
+	int max=8;
+	static int count=0;
+	//定义一个数组array。保存皇后放置的结果
+	int[] arr=new int[max];
+	public static void main(String[] args) {
+		// TODO 自动生成的方法存根
+		Queue8 queue8=new Queue8();
+		queue8.check(0);
+		System.out.printf("共有%d种解法:",count);
+	}
+	
+	//放置第n个皇后
+	public void check(int n) {
+		if(n==max) {  //皇后以及放完了
+			print();
+			count++;
+			return;
+		}
+		
+		//依次放入皇后，并判断是否冲突
+		for(int i=0;i<max;i++) {
+			//先把当前这个皇后n，放到该行的第1列
+			arr[n]=i; 
+			//判断当放置第n个皇后到第i列时，是否冲突
+			if(judge(n)) {
+				check(n+1);
+			}
+			//如果冲突，就继续执行arr[n]=i;即将第n个皇后，放置在本行的后移的一个位置
+		}
+		
+	}
+	
+	//写一个方法，用于判断第n个皇后的摆放位置是否与前面的皇后摆放的位置冲突
+	public boolean judge(int n) {
+		for(int i=0;i<n;i++) {
+			//arr[n]==arr[i]判断是不是在同一列
+			//Math.abs(n-i)==Math.abs(arr[n]-arr[i])判断是不是在同一斜线
+			if(arr[n]==arr[i]||Math.abs(n-i)==Math.abs(arr[n]-arr[i])) {
+				return false;
+			}
+			
+		}
+		return true;
+	}
+
+	//写一个方法,可以将皇后摆放的位置输出
+	private void print() {
+		for(int i=0;i<arr.length;i++) {
+			System.out.print(arr[i]+" ");
+		}
+		System.out.println();
+	}
+}
