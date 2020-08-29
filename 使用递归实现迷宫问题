@@ -1,0 +1,78 @@
+public class MIGong {
+    
+	//利用递归完成迷宫问题
+	
+	public static void main(String[] args) {
+		// TODO 自动生成的方法存根
+        //迷宫的大小为8行7列,1表示为墙
+		//创建迷宫
+		int[][] map=new int[8][7];
+		//创建迷宫的格式,上下两端都为墙
+		for(int i=0;i<map[0].length;i++) {
+			map[0][i]=1;
+			map[7][i]=1;
+		}
+		//左右两端都为墙
+		for(int i=1;i<map.length-1;i++) {
+			map[i][0]=1;
+			map[i][6]=1;
+		}
+		//第四行的前三个位置也为1
+		map[3][1]=1;
+		map[3][2]=1;
+		
+		//输出此时的map
+		System.out.println("迷宫为：");
+		for(int i=0;i<map.length;i++) {
+			for(int j=0;j<map[0].length;j++) {
+				System.out.printf("%d ",map[i][j]);
+			}
+			System.out.println();
+		}
+		
+		setWay(map,1,1);
+		
+		//输出新的地图，2表示路径
+		System.out.println("新地图为：");
+		for(int i=0;i<map.length;i++) {
+			for(int j=0;j<map[0].length;j++) {
+				System.out.printf("%d ",map[i][j]);
+			}
+			System.out.println();
+		}
+		
+	}
+	
+	//使用递归回溯来找路
+	//说明：map表示迷宫的地图，i j表示起始位置
+	//如果走到了[6][5]则表示通路找到了
+	//约定：当map[i][j]为0表示该点没有走过，1表示墙，2表示通路可以走，3表示该点已经走过，但是不通
+	//策略：下->右->上->左 即：往下走走不通，则向右，再不通则向上，最后向左
+	public static boolean setWay(int[][] map,int i,int j) {
+		//如果[6][5]=2,则表示已经走出迷宫
+		if(map[6][5]==2) {
+			return true;
+		}else {
+			if(map[i][j]==0) { //如果当前的点还没有走过
+				//按照策略走
+				map[i][j]=2; //假设该点可以走
+				if(setWay(map, i+1, j)) {  //向下走
+					return true;
+				}else if(setWay(map,i,j+1)) {  //向右走
+					return true;
+				}else if(setWay(map,i-1,j)) {   //向上走
+					return true;
+				}else if(setWay(map,i,j-1)) {   //向左走
+					return true;
+				}else {  
+					map[i][j]=3;    //表示该点走不通
+				}
+			}else {
+				return false;
+			}
+		}
+		return false;
+		
+	}
+
+}
