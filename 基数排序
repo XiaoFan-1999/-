@@ -1,0 +1,47 @@
+public class RadixSort {
+
+	public static void main(String[] args) {
+		// TODO 自动生成的方法存根
+		//定义测试数组
+		int[] arr= {53,3,542,748,14,214};
+		radixSort(arr);
+	}
+	
+	public static void radixSort(int[] arr) {
+		//得到数组中的最大数的小标，这样才能知道要循环多少轮
+		int max=0;
+		for(int maxindex=1;maxindex<arr.length;maxindex++) {
+			if(arr[max]<arr[maxindex]) {
+				max=maxindex;
+			}
+		}
+		//得到数字共有几位数
+		int times=(arr[max]+"").length();
+		for(int time=0,n=1;time<times;time++,n*=10) {
+			//创建桶,共有10个桶，每个桶最多有arr.length个数据
+			int[][] bucket=new int[10][arr.length];
+			//用于记录每个桶中有多少数据，用于遍历桶中的数据
+			int[] bucketElementsCount=new int[10];
+			//开始遍历数组
+			for(int i=0;i<arr.length;i++) {
+				int digitOfElement=(int) ((arr[i]/n)%10); //取出对应的位数
+				//将其存入bucket中
+				bucket[digitOfElement][bucketElementsCount[digitOfElement]]=arr[i];
+				bucketElementsCount[digitOfElement]++;
+			}
+			
+			//将bucket中的数据输出到arr中
+			int index=0;
+			for(int i=0;i<bucketElementsCount.length;i++) {
+				if(bucketElementsCount[i]!=0) {
+					for(int j=0;j<bucketElementsCount[i];j++) {
+						arr[index]=bucket[i][j];
+						index++;
+					}
+				}
+			}
+			System.out.println("第"+(time+1)+"轮过后的数组为："+Arrays.toString(arr));
+		}
+	}
+
+}
