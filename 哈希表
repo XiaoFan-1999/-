@@ -1,0 +1,213 @@
+public class HashTableDemo {
+
+	public static void main(String[] args) {
+		// TODO 自动生成的方法存根
+		hashTable hashTab = new hashTable(7);
+
+		// 写一个简单的菜单
+		String key = "";
+		Scanner scanner = new Scanner(System.in);
+		while (true) {
+			System.out.println("add : 添加雇员");
+			System.out.println("show : 显示雇员");
+			System.out.println("find : 查找雇员");
+			System.out.println("del : 删除雇员");
+			System.out.println("exit : 退出");
+			key = scanner.next();
+			switch (key) {
+			case "add":
+				System.out.println("请输入一个id");
+				int id = scanner.nextInt();
+				System.out.println("请输入一个名字");
+				String name = scanner.next();
+				Emp emp = new Emp(id, name);
+				hashTab.add(emp);
+				break;
+			case "show":
+				hashTab.show();
+				break;
+			case "find":
+				System.out.println("请输入id");
+				id = scanner.nextInt();
+				hashTab.findById(id);
+				break;
+			case "del":
+				System.out.println("请输入id");
+				id = scanner.nextInt();
+				hashTab.delById(id);
+				break;
+			case "exit":
+				scanner.close();
+				System.exit(0);
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+}
+
+//创建HashTable 管理多条链表
+class hashTable{
+	private EmpLinkedList[] empLinkedListArray;
+	private int maxSize;  //表示共有多少条链表
+	
+	//构造器
+	public hashTable(int Size) {
+		this.maxSize=Size;
+		//初始化empLinkedListArray
+		empLinkedListArray=new EmpLinkedList[Size];
+		//初始化各个链表
+		for(int i=0;i<Size;i++) {
+			empLinkedListArray[i]=new EmpLinkedList();
+		}
+	}
+	
+	
+	//添加雇员
+	public void add(Emp emp) {
+		//根据员工id得到应该添加到哪个链表
+		int empLinkedListNo=hasFun(emp.id);
+		//将emp添加到对应的链表中
+		empLinkedListArray[empLinkedListNo].add(emp);
+	}
+	
+	//根据输入id查找雇员
+	public void findById(int id) {
+		int empLinkedListNo=hasFun(id);
+		Emp emp=empLinkedListArray[empLinkedListNo].findEmp(id);
+		if(emp!=null) {
+			System.out.printf("找到该雇员了，名字为：%s",emp.name);
+		}else {
+			System.out.println("未找到该雇员");
+		}
+	}
+	
+	//根据ID删除雇员
+	public void delById(int id) {
+		int empLinkedListNo=hasFun(id);
+		empLinkedListArray[empLinkedListNo].delEmp(id);
+	}
+	
+	//遍历所有的链表，遍历hashTable
+	public void show() {
+		for(int i=0;i<empLinkedListArray.length;i++) {
+			empLinkedListArray[i].show(i);
+		}
+	}
+	
+	//编写一个散列函数，使用一个简单取模法
+	public int hasFun(int id) {
+		return id % maxSize;
+	}
+}
+
+class Emp { // 构造链表节点
+	int id;
+	String name;
+	Emp next;
+
+	public Emp(int id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
+}
+
+// 构造链表
+class EmpLinkedList {
+	private Emp Head; // 头指针,直接指向第一个Emp
+
+	// 添加雇员到链表
+	public void add(Emp emp) {
+		// 假如链表为空，则该雇员就为Head
+		if (Head == null) {
+			Head = emp;
+			return;
+		}
+		// 链表不为空
+		Emp curEmp = Head;
+		while (true) {
+			// 找到最后一个节点，添加到最后面
+			if (curEmp.next == null) {
+				break;
+			}
+			curEmp = curEmp.next;
+		}
+		// 跳出循环后，已经是最后一个节点了
+		// 将新节点加入到链表中
+		curEmp.next = emp;
+	}
+
+	// 显示链表
+	public void show(int no) {
+		// 判断链表是否为空
+		if (Head == null) {
+			System.out.println("第" + (no + 1) + "条链表为空~");
+			return;
+
+		}
+		System.out.print("第" + (no + 1) + "条链表信息为~");
+		Emp curEmp = Head;
+		while (true) {
+			System.out.printf("-> id=%d name=%s\t", curEmp.id, curEmp.name);
+			if (curEmp.next == null) {
+				break;
+			}
+			curEmp = curEmp.next;
+		}
+		System.out.println();
+	}
+	
+	//根据id查找雇员
+	public Emp findEmp(int id) {
+		if(Head==null) {
+			System.out.println("链表为空，不存在该雇员");
+			return null;
+		}
+		boolean flag=false;   //判断是否找到雇员
+		Emp curEmp=Head;
+		while(true) {
+			if(curEmp.id==id) {
+				flag=true;   //找到该id号码的雇员
+				break;
+			}
+			if(curEmp.next==null) {  //为最后一个节点了
+				break;
+			}
+			curEmp=curEmp.next;
+		}
+		if(flag) {
+			return curEmp;
+		}else {
+			return null;
+		}
+	}
+	
+	//根据id删除雇员
+	public void delEmp(int id) {
+		if(Head==null) {
+			System.out.println("该链表中没有雇员");
+			return;
+		}
+		if(Head.id==id) {
+			Head=Head.next;
+			return;
+		}
+		Emp curEmp=Head;
+		while(true) {
+			if(curEmp.next==null) {
+				System.out.println("不存在该雇员");
+				break;
+			}
+			if(curEmp.next.id==id) {
+				//删除雇员
+				curEmp.next=curEmp.next.next;   
+				System.out.println("已经删除了编号为"+id+"的雇员!");
+				break;
+			}
+			curEmp=curEmp.next;
+		}
+	}
+}
