@@ -1,0 +1,63 @@
+public class KMPAlogrithm {
+    public static void main(String[] args) {
+        //测试
+        String str1="BBC ABCDAB ABCDABCDABDE";
+        String str2="ABCDABD";
+
+        int[] next=kmpNext(str2);
+        System.out.println("Next"+ Arrays.toString(next));
+
+        int index=kmpAlogrithm(str1,str2,next);
+        System.out.println("index="+index);
+    }
+
+    //KMP搜索算法
+
+    /**
+     *
+     * @param str1  字符串
+     * @param str2  要寻找匹配的字符串
+     * @param next  部分匹配值表
+     * @return   匹配到的索引位置，-1则为未匹配到
+     */
+    public static int kmpAlogrithm(String str1,String str2,int[] next){
+        for(int i=0,j=0;i<str1.length();i++){
+           //当str1.charAt(i)!=str2.charAt(j),调整j的大小
+            //KMP算法的核心点
+            while(j>0&&str1.charAt(i)!=str2.charAt(j)){
+                j=next[j-1];
+            }
+            if(str1.charAt(i)==str2.charAt(j)){
+                j++;
+            }
+            if(j==str2.length()){
+                //表示已经找到了
+                return i-j+1;
+            }
+        }
+        return -1;
+    }
+
+
+    //获取到一个子串的部分匹配值
+    public static int[] kmpNext(String str){
+        //创建一个数组用于记录部分匹配值
+        int[] next=new int[str.length()];
+        next[0]=0;  //当长度为1时，部分匹配值为0
+        for(int i=1,j=0;i<str.length();i++){
+            //当str.charAt(i)!=str.charAt(j)我们需要从next[j-1]获取新的j
+            //知道发现有str.charAt(i)==str.charAt(j)成立才退出
+            //此为KMP算法的核心点
+            while(j>0&&str.charAt(i)!=str.charAt(j)){
+                j=next[j-1];
+            }
+            //当str.charAt(i)==str.charAt(j)满足是，部分匹配值+1
+            if(str.charAt(i)==str.charAt(j)) {
+                j++;
+            }
+            next[i]=j;
+        }
+        return next;
+    }
+
+}
