@@ -1,0 +1,26 @@
+public class halfSearch {
+
+	public static void main(String[] args) {
+		// TODO 自动生成的方法存根
+		//定义一个测试数组
+		int[] arr= {1,8,10,66,89,120,145,1000,1024};
+		//需要寻找的数组
+		int findVal=1024;
+		System.out.println(HalfSearch(arr, findVal, 0, arr.length-1));
+	}
+	
+	public static int HalfSearch(int[] arr,int findVal,int left,int right) {
+		int mid=(left+right)/2;  //中间的数
+		if(left<=right) {        //结束循环条件
+			if(findVal>arr[mid]) {    //向右进行递归查找
+				return HalfSearch(arr, findVal, mid+1, right);
+			}else if(findVal<arr[mid]) {  //向左进行递归查找
+				return HalfSearch(arr, findVal, left, mid);  
+			}else {           //找到了，返回下标
+				return mid;
+			}
+		}else {
+			return -1;
+		}
+	}
+}
