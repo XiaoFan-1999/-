@@ -1,0 +1,58 @@
+class stack{
+	
+	//定义一个最大堆栈容量
+	private int maxSize;
+	//定义一个top表示栈顶
+	private int top=-1;
+	//定义一个数组
+	int[] Stack;
+	
+	//创建数组
+ 	public void arrayStack(int maxSize) {
+ 		this.maxSize=maxSize;
+ 		Stack=new int[this.maxSize];
+ 	}
+ 	
+ 	//判断堆栈是否已满
+ 	public boolean isFull() {
+ 		return top==maxSize-1;
+ 	}
+ 	
+ 	//判断堆栈是否为空
+ 	public boolean isEmpty() {
+ 		return top==-1;
+ 	}
+ 	
+ 	//入栈
+ 	public void push(int value) {
+ 		//判断堆栈是否已满
+ 		if(isFull()) {
+ 			System.out.println("堆栈已满！");
+ 			return;
+ 		}
+ 		
+ 		//入栈
+ 		top++;
+ 		Stack[top]=value;
+ 	}
+ 	
+ 	//出栈
+ 	public int pop() {
+ 		int value=Stack[top];
+ 		top--;
+ 		return value;
+ 	}
+	
+ 	//显示堆栈
+ 	public void show() {
+ 		//判断堆栈是否为空
+ 		if(isEmpty()) {
+ 			System.out.println("堆栈为空，没有数据");
+ 			return;
+ 		}
+ 		for(int i=top;i>=0;i--) {
+ 			System.out.printf("Stack[%d]=%d \n",i,Stack[i]);
+ 		}
+ 	}
+	
+}
