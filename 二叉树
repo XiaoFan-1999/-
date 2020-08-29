@@ -1,0 +1,298 @@
+public class BinaryTreeDemo {
+
+	public static void main(String[] args) {
+		// TODO 自动生成的方法存根
+		//先需要创建一个二叉树
+		BinaryTree binaryTree=new BinaryTree();
+		//创建需要的节点
+		HeroNode root=new HeroNode(1,"宋江");
+		HeroNode node2=new HeroNode(2,"吴用");
+		HeroNode node3=new HeroNode(3,"卢俊义");
+		HeroNode node4=new HeroNode(4,"林冲");
+		HeroNode node5=new HeroNode(5,"关胜");
+		
+		//我们先手动创建二叉树
+		root.setLeft(node2);
+		root.setRight(node3);
+		node3.setRight(node4);
+		node3.setLeft(node5);
+		binaryTree.setRoot(root);
+		
+		//测试 前序遍历
+		System.out.println("测试前，前序遍历的二叉树为：");
+		binaryTree.preOrder();
+		binaryTree.removeNode(3);
+		System.out.println("删除后，前序遍历的二叉树为：");
+		binaryTree.preOrder();
+	}
+
+}
+
+//定义二叉树
+class BinaryTree{
+	private HeroNode root;
+	
+	public void setRoot(HeroNode root) {
+		this.root=root;
+	}
+	
+	//删除节点
+	public void removeNode(int id) {
+		if(this.root!=null) {
+			if(this.root.getId()==id) {
+				this.root=null;
+			}else {
+				this.root.removeNode(id);
+			}
+		}else {
+			System.out.println("这是一个空树，不可删除");
+		}
+	}
+	
+	//前序遍历
+	public void preOrder() {
+		if(root!=null) {
+			this.root.preOrder();
+		}else {
+			System.out.println("当前二叉树为空");
+		}
+	}
+	
+	//中序遍历
+	public void infixOrder() {
+		if(root!=null) {
+			this.root.infixOrder();
+		}else {
+			System.out.println("当前二叉树为空");
+		}
+	}
+	
+	//后序遍历
+	public void afterOrder() {
+		if(root!=null) {
+			this.root.afterOrder();
+		}else {
+			System.out.println("当前二叉树为空");
+		}
+	}
+	
+	//前序查找
+	public HeroNode preOrderFind(int no) {
+		if(root!=null) {
+			return this.root.preOrderFind(no);
+		}else {
+			return null;
+		}
+	}
+	
+	//中序查找
+	public HeroNode infixOrderFind(int no) {
+		if(root!=null) {
+			return this.root.infixOrderFind(no);
+		}else {
+			return null;
+		}
+	}
+	
+	//后序查找
+	public HeroNode afterOrderFind(int no) {
+		if(root!=null) {
+			return this.root.afterOrderFind(no);
+		}else {
+			return null;
+		}
+	}
+}
+
+//先创建HeroNode节点
+class HeroNode{
+	private int id;
+	private String name;
+	private HeroNode left;
+	private HeroNode right;
+	
+	
+	public HeroNode(int id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+
+
+	public int getId() {
+		return id;
+	}
+
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public HeroNode getLeft() {
+		return left;
+	}
+
+
+	public void setLeft(HeroNode left) {
+		this.left = left;
+	}
+
+
+	public HeroNode getRight() {
+		return right;
+	}
+
+
+	public void setRight(HeroNode right) {
+		this.right = right;
+	}
+
+
+	@Override
+	public String toString() {
+		return "HeroNode [id=" + id + ", name=" + name + "]";
+	}
+	
+	//递归删除节点
+	//规则：
+	//1、如果删除的是叶子节点，则删除该节点
+	//2、如果删除的是节点非叶子节点，则删除这个树
+	public void removeNode(int id) {
+		//如果左子节点为要删除的节点，就置为空
+		if(this.left!=null&&this.left.id==id) {
+			this.left=null;
+			return;
+		}
+		// 如果右子节点为要删除的节点，就置为空
+		if (this.right != null && this.right.id == id) {
+			this.right = null;
+			return;
+		}
+		//如果上面两个都不是，则向左子树进行递归删除
+		if(this.left!=null) {
+			this.left.removeNode(id);
+		}
+		//如果上面都不是，则向右子树进行递归删除
+		if(this.right!=null) {
+			this.right.removeNode(id);
+		}
+	}
+	
+	//前序遍历
+	public void preOrder() {
+		System.out.println(this); //先输出父节点
+		
+		if(this.left!=null) {
+			this.left.preOrder();  //左子树不为空，则继续前序遍历
+		}
+		
+		if(this.right!=null) {
+			this.right.preOrder();  //右子树不为空，则继续前序遍历
+		}
+	}
+	
+	//中序遍历
+	public void infixOrder() {
+		//递归向左子树中序遍历
+		if(this.left!=null) {
+			this.left.infixOrder();
+		}
+		//输出父节点
+		System.out.println(this);
+		//递归向右子树中序遍历
+		if(this.right!=null) {
+			this.right.infixOrder();
+		}
+		
+	}
+	
+	//后序遍历
+	public void afterOrder() {
+		//递归向左子树后序遍历
+		if(this.left!=null) {
+			this.left.afterOrder();
+		}
+		//递归向右子树后序遍历
+		if(this.right!=null) {
+			this.right.afterOrder();
+		}
+		//输出父节点
+		System.out.println(this);
+	}
+	
+	//前序递归查找
+	public HeroNode preOrderFind(int no) {
+		//如果父节点就是要找的节点
+		if(this.id==no) {
+			return this;
+		}
+		HeroNode resNode=null;
+		//如果左子树不为空
+		if(this.left!=null) {
+			//向左递归查找
+			resNode=this.left.preOrderFind(no);
+		}
+		//如果resNode 不为空，说明找到了节点
+		if(resNode!=null){
+			return resNode;
+		}
+		if(this.right!=null) {
+			resNode=this.right.preOrderFind(no);
+		}
+		return resNode;
+	}
+	
+	//中序递归查找
+	public HeroNode infixOrderFind(int no) {
+		HeroNode resNode=null;
+		if(this.left!=null) {
+			//向左子树进行递归查找
+			resNode=this.left.infixOrderFind(no); 
+		}
+		if(resNode!=null) {
+			return resNode;
+		}
+		if(this.id==no) {
+			return this;
+		}
+		if(this.right!=null) {
+			resNode=this.right.infixOrderFind(no);
+		}
+		return resNode;
+	}
+	
+	//后序递归查找
+	public HeroNode afterOrderFind(int no) {
+		HeroNode resNode=null;
+		if(this.left!=null) {
+			//向左子树进行递归查找
+			resNode=this.left.infixOrderFind(no); 
+		}
+		if(resNode!=null) {
+			return resNode;
+		}
+		//向右子树进行递归查找
+		if(this.right!=null) {
+			resNode=this.right.infixOrderFind(no);
+		}
+		if(resNode!=null) {
+			return resNode;
+		}
+		if(this.id==no) {
+			return this;
+		}
+		return resNode;
+	}
+	
+	
+}
